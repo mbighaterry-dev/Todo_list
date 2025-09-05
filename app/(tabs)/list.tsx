@@ -1,8 +1,11 @@
-import { FlatList, StyleSheet, Text, View, } from 'react-native';
+import { FlatList, StyleSheet, Text, TouchableOpacity, View, } from 'react-native';
 import { useTasks } from '../context/taskContext';
 import { Checkbox} from 'expo-checkbox'
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { useRouter } from 'expo-router';
 export default function List() {
     const {tasks, removeTask} = useTasks();
+    const router = useRouter();
   return (
         <View style={styles.container}>
         {
@@ -20,8 +23,10 @@ export default function List() {
                                 {item.date.toLocaleDateString()} {item.time.toLocaleTimeString()}
                             </Text>
                         </View>
-                        
-                        <Checkbox value= {false} onValueChange={() => removeTask(item.id)}/>
+
+                            <Ionicons name='create-outline' size={24} color='black' onPress={() => router.push({pathname: '/edit/[id]', params: {id: item.id}})} />
+
+                        <Checkbox style={{borderRadius: 10}} value= {false} onValueChange={() => removeTask(item.id)}/>
                     </View>
                 )}
                 />
@@ -44,7 +49,6 @@ const styles = StyleSheet.create({
     },
     taskContainer:{
         flexDirection: 'row',
-        justifyContent: 'space-between',
         alignItems: 'center',
         padding: 20,
         margin: 10,
@@ -56,6 +60,10 @@ const styles = StyleSheet.create({
         shadowRadius: 2,
         elevation: 2,
         marginTop: 20,
+        justifyContent: 'space-between',
+    },
+    iconButton:{
+        marginLeft: 10,
     }
 
 })

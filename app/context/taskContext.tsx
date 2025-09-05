@@ -12,6 +12,7 @@ type TaskContextType = {
     tasks: Task[];
     addTask: (task: Task) => void
     removeTask: (id: string) => void
+    updateTask?: (task: Task) => void
 }
 const TaskContext = createContext<TaskContextType | undefined>(undefined)
 export default function TaskProvider({ children }: { children: React.ReactNode }) {
@@ -60,8 +61,9 @@ export default function TaskProvider({ children }: { children: React.ReactNode }
    
     const addTask = (task: Task) => setTasks((prev) => [...prev, task])
     const removeTask = (id: string) => setTasks((prev) => prev.filter((task) => task.id !== id));
+    const updateTask = (updatedTask: Task) => setTasks((prev) => prev.map((task) => task.id === updatedTask.id ? {...task, ...updatedTask} : task));
     return (
-        <TaskContext.Provider value={{tasks, addTask, removeTask}}>
+        <TaskContext.Provider value={{tasks, addTask, removeTask, updateTask}}>
             {children}
         </TaskContext.Provider>
     )
