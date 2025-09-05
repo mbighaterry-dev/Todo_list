@@ -1,75 +1,100 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View , KeyboardAvoidingView,Platform} from 'react-native'
+import { useState } from 'react'
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { useRouter } from 'expo-router';
+import { useTasks } from '../context/taskContext';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+export default function App() {
+const {addTask} = useTasks();
+const router = useRouter();
 
-export default function HomeScreen() {
+  const [title, setTitle] = useState('');
+  const [date, setDate] = useState<Date | null>(null);
+  const [time, setTime] = useState<Date | null>(null);
+
+  const [pickerMode, setPickerMode] = useState<'date' | 'time' | null>(null);
+  const [pickerVisible, setPickerVisible] = useState(false);
+
+  const showPiker = (mode: 'date' | 'time') => {
+    setPickerMode(mode);
+    setPickerVisible(true);
+  }
+  const hidePiker = () => setPickerVisible(false);
+
+  const handleConfirm = (selected: Date) => {
+    if(pickerMode === 'date') setDate(selected);
+    if(pickerMode === 'time') setTime(selected);
+    hidePiker();
+  }
+
+  const handleAdd =()  => {
+    if (!title || !date || !time)
+      return;
+    addTask({
+      id: Date.now().toString(),
+      title,
+      date: date.toLocaleDateString(),
+      time: time.toLocaleTimeString([], {hour:'2-digit', minute: '2-digit'}),
+    });
+    setTitle('');
+    setDate(null);
+    setTime(null);
+    router.push('/list')
+  }
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
-  );
+    <KeyboardAvoidingView behavior='padding'
+    keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
+    >
+    <View style={styles.container}>
+      <TextInput
+      style={styles.input}
+      placeholder='Task Title'
+      value= {title}
+      onChangeText={setTitle}
+      />
+      <TouchableOpacity style={styles.input} onPress={() => showPiker('date')}>
+        <Text>
+          {date ? date.toLocaleDateString() : 'Select Date'}
+        </Text>
+      </TouchableOpacity>   
+      <TouchableOpacity style={styles.input} onPress={() => showPiker('time')}>
+        <Text>
+            {time ? time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Pick Time'}
+
+        </Text>
+      </TouchableOpacity>
+      <DateTimePickerModal
+      isVisible ={pickerVisible}
+      mode ={pickerMode || 'date'}
+      onConfirm ={handleConfirm}
+      onCancel = {hidePiker}
+      />
+      <TouchableOpacity style={styles.listButton} onPress={handleAdd}>
+        <Text style={{color:'#fff', fontSize:16}}>Add to List</Text>
+      </TouchableOpacity>
+    </View>
+    </KeyboardAvoidingView>
+  )
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  container:{
+    justifyContent:'center',
+    alignItems:'center',
+    marginTop:"50%",
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  input:{
+    borderWidth:1,
+    borderColor:'#ccc',
+    padding:12,
+    borderRadius:8,
+    width:'80%',
+    marginVertical:8,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  listButton:{
+    backgroundColor:'#007BFF',
+    padding:12,
+  borderRadius:8,
+    marginTop:16,
   },
-});
+})
