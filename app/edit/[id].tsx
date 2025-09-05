@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, Button } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, } from 'react-native';
 import { useState } from 'react';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -23,12 +23,15 @@ export default function UpdateTask() {
     setPickerMode(mode);
     setPickerVisible(true);
   };
+
   const hidePicker = () => setPickerVisible(false);
+
   const handleConfirm = (selected: Date) => {
     if (pickerMode === 'date') setDate(selected);
     if (pickerMode === 'time') setTime(selected);
     hidePicker();
   };
+
   const handleUpdate = () => {
     if (!title || !date || !time) return alert('Please fill all fields');
     if (updateTask) {
@@ -52,7 +55,9 @@ export default function UpdateTask() {
       <TouchableOpacity style={styles.input} onPress={() => showPicker("time")}>
         <Text>{time ? time.toLocaleTimeString() : "Select Time"}</Text>
       </TouchableOpacity>
-      <Button title="Save Changes" onPress={handleUpdate} />
+      <TouchableOpacity style={styles.listButton} onPress={handleUpdate}>
+              <Text style={{color:'#fff', fontSize:16}}>Save Changes</Text>
+            </TouchableOpacity>
 
       <DateTimePickerModal
         isVisible={pickerVisible}
@@ -65,8 +70,17 @@ export default function UpdateTask() {
 }
 
 const styles = StyleSheet.create({
-   container: { flex: 1,justifyContent: "center", padding: 20,},
-  header: { fontSize: 20, fontWeight: "bold", marginBottom: 10, alignSelf: "center" },
+   container: { 
+    flex: 1,
+    justifyContent: "center",
+     padding: 20,
+    },
+  header: { 
+    fontSize: 20, 
+    fontWeight: "700",
+     marginBottom: 20, 
+     alignSelf: "center"
+     },
   input: {
     borderWidth: 1,
     borderColor: "#ccc",
@@ -74,4 +88,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderRadius: 5,
   },
+  listButton:{
+    backgroundColor:'#007BFF',
+    padding:12,
+    borderRadius:8,
+    marginTop:16,
+    alignItems:'center',
+  }
 })

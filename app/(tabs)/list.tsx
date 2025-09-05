@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, Text, TouchableOpacity, View, } from 'react-native';
+import { FlatList, StyleSheet, Text , View, } from 'react-native';
 import { useTasks } from '../context/taskContext';
 import { Checkbox} from 'expo-checkbox'
 import Ionicons from '@expo/vector-icons/Ionicons';

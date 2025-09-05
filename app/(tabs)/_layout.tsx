@@ -9,12 +9,12 @@ import { StatusBar } from "react-native";
         <Tabs.Screen name="index" options={{
          tabBarLabel: ' Home',
          tabBarIcon: () => (
-            <Ionicons name="home" size={24}  color='gray' />
+            <Ionicons name="home" size={24}color='gray' />
          ),
          headerTitle: 'My To-Do App',
          headerTitleAlign: 'center',
          headerStyle: {backgroundColor: '#007BFF'},
-         headerTitleStyle: {color: 'white'}
+         headerTitleStyle: {color: 'white', fontWeight: '700', fontSize: 20}
         }}/>
         <Tabs.Screen name="list" options={{
          tabBarLabel: 'Tasks',
@@ -24,7 +24,7 @@ import { StatusBar } from "react-native";
          headerTitle: 'My Tasks',
          headerTitleAlign: 'center',
          headerStyle: {backgroundColor: '#007BFF'},
-         headerTitleStyle: {color: 'white'}
+         headerTitleStyle: {color: 'white', fontWeight: '700', fontSize: 20}
         }}/>
     </Tabs>
     )
