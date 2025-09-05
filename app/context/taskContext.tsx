@@ -16,7 +16,7 @@ type TaskContextType = {
 const TaskContext = createContext<TaskContextType | undefined>(undefined)
 export default function TaskProvider({ children }: { children: React.ReactNode }) {
     const [tasks, setTasks] = useState<Task[]>([]);
-
+    console.log('Tasks:', tasks);
     useEffect(() => {
     const loadTasks = async() => {
          try{
@@ -26,7 +26,9 @@ export default function TaskProvider({ children }: { children: React.ReactNode }
             const restored = persed.map((tasks: any) => ({
                 tasks,
                 date : new Date(tasks.date),
-                time : new Date(tasks.time)
+                time : new Date(tasks.time),
+                title: tasks.title,
+                id: tasks.id,
             }));
             setTasks(restored);
         }
@@ -42,8 +44,10 @@ export default function TaskProvider({ children }: { children: React.ReactNode }
             try {
                 const toStore = tasks.map((task) => ({
                     ...task,
-                    date: task.date.getTime(),
-                    time: task.time.getTime(),
+                    date: new Date(task.date).getTime(),
+                    time: new Date(task.time).getTime(),
+                    title: task.title,
+                    id: task.id,
                 }));
                  await AsyncStorage.setItem("tasks", JSON.stringify(toStore));
              }catch(err) {

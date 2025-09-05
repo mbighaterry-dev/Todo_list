@@ -32,9 +32,9 @@ const router = useRouter();
       return;
     addTask({
       id: Date.now().toString(),
-      title,
-      date: date.toLocaleDateString(),
-      time: time.toLocaleTimeString([], {hour:'2-digit', minute: '2-digit'}),
+      title: title,
+      date: date,
+      time: time,
     });
     setTitle('');
     setDate(null);

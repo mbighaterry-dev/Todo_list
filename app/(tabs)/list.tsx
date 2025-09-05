@@ -15,9 +15,9 @@ export default function List() {
                 renderItem={({item}) => (
                     <View style ={styles.taskContainer}>
                         <View style={{ gap: 8 }}  >
-                            <Text style={{ fontWeight: '700', fontSize: 16 }}>{item.title}</Text>
+                            <Text style={{ fontWeight: '700', fontSize: 16 }}>{item.title ? item.title : 'Untitled Task'}</Text>
                             <Text>
-                                {item.date}  
+                                {item.date.toLocaleDateString()} {item.time.toLocaleTimeString()}
                             </Text>
                         </View>
                         
